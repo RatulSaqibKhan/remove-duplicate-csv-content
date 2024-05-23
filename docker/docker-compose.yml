@@ -1,0 +1,26 @@
+volumes:
+  node-modules:
+    driver: local
+
+networks:
+  duplicate-remover-net:
+    external: true
+
+services:
+
+  duplicate-remover-app:
+    image: ${COMPOSE_PROJECT_NAME}:${PROJECT_BUILD_MODE}
+    build:
+      context: ${PROJECT_ROOT_PATH}
+      dockerfile: docker/Dockerfile
+    container_name: duplicate-remover
+    command: ["npm", "run", "dev"]
+    env_file:
+      - ${PROJECT_ROOT_PATH}docker/app.env
+    volumes:
+      - ${PROJECT_ROOT_VOLUME_PATH}${PROJECT_DIR_NAME}:/usr/src/app
+      - node-modules:/usr/src/app/node_modules/
+    networks:
+      duplicate-remover-net:
+        aliases:
+          - duplicate-remover-net
